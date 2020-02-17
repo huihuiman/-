@@ -1,5 +1,5 @@
 # Dictionary
-<ul>電子字典功能
+<li>電子字典功能</li>
 
 創造socket連接伺服器與客戶端連接
 
