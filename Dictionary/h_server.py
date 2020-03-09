@@ -5,20 +5,17 @@ import signal
 import pymysql
 import sys
 
-#定義需要的全局變量
 DICT_TEXT = './dict.txt'
 HOST = '0.0.0.0'
 PORT = 8000
 ADDR = (HOST,PORT)
 
-#流程控制
 def main():
     db = pymysql.connect('localhost','root','a123456','dict')
     s = socket()
     s.setsockopt(SOL_SOCKET,SO_REUSEADDR,1)
     s.bind(ADDR)
     s.listen(5)
-    #忽略子進程訊號
     signal.signal(signal.SIGCHLD,signal.SIG_IGN)
 
     while True:
@@ -32,7 +29,6 @@ def main():
             print(e)
             continue 
 
-        #創建子進程
         pid = os.fork()
         if pid == 0:
             s.close()
@@ -42,7 +38,6 @@ def main():
             continue
 
 def do_child(c,db):
-    #客戶端請求
     while True:
         data = c.recv(128).decode()
         print(c.getpeername(),":",data)
@@ -91,8 +86,7 @@ def do_register(c,db,data):
     if r != None:
         c.send(b'EXISTS')
         return
-
-    #新增用戶
+    
     sql = "insert into user (name,passwd) values ('%s','%s')"%(name,passwd)
     try:
         cursor.execute(sql)
